@@ -3,8 +3,8 @@ interface RouteInfo {
   readonly parent: RouteInfo | null;
   readonly child: RouteInfo | null;
   readonly localName: string;
-  // readonly params: Dict<unknown> | undefined;
-  // readonly paramNames: string[];
+  readonly params: { [name: string]: unknown } | undefined;
+  readonly paramNames: string[];
   // readonly queryParams: Dict<unknown>;
   // readonly metadata: unknown;
   // find(
@@ -14,32 +14,32 @@ interface RouteInfo {
 }
 
 export default class RouteInfoMock implements RouteInfo {
-    name: string;
-    parent: RouteInfo | null;
-    child: RouteInfo | null;
-    localName: string;
+  name: string;
+  parent: RouteInfo | null = null;
+  child: RouteInfo | null = null;
+  localName: string;
+  params: { [name: string]: unknown } = {};
+  paramNames: string[] = [];
 
-    constructor(name: string) {
-        this.name = name;
-    }
+  constructor(name: string) {
+    this.name = name;
+    this.localName = name.split('.').pop()!;
+  }
 
-    withName(name: string): RouteInfoMock {
-      this.name = name;
-      return this;
-    }
+  withParent(parent: RouteInfo): RouteInfoMock {
+    this.parent = parent;
+    return this;
+  }
 
-    withParent(parent: RouteInfo): RouteInfoMock {
-      this.parent = parent;
-      return this;
-    }
+  withChild(child: RouteInfo): RouteInfoMock {
+    this.child = child;
+    return this;
+  }
 
-    withChild(child: RouteInfo): RouteInfoMock {
-      this.child = child;
-      return this;
-    }
+  withParams(params: { [name: string]: unknown }): RouteInfoMock {
+    this.params = params;
+    this.paramNames = Object.keys(params);
 
-    withLocalName(localName: string): RouteInfoMock {
-      this.localName = localName;
-      return this;
-    }
+    return this;
+  }
 }
